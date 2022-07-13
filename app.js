@@ -1,10 +1,14 @@
 const express = require("express"),
     logger = require("morgan"),
     path = require("path"),
-    app = express(),
     flash = require("connect-flash"),
     session = require("express-session"),
-    dotenv = require("dotenv");
+    dotenv = require("dotenv"),
+    app = express();
+
+//Import routes
+const index = require("./routes/index"),
+    data = require("./routes/data");
 
 //configure dotenv
 dotenv.config({
@@ -29,10 +33,6 @@ app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-//Import routes
-const index = require("./routes/index"),
-    data = require("./routes/data");
 
 //Initialize session and Flash for error message
 app.use(
