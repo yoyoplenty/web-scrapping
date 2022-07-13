@@ -6,7 +6,7 @@ const express = require("express"),
     session = require("express-session"),
     dotenv = require("dotenv");
 
-//Configure dotenv
+//configure dotenv
 dotenv.config({
     path: "./config.env",
 });
@@ -19,10 +19,6 @@ const Handlebars = require("handlebars"),
         handlebars: allowInsecurePrototypeAccess(Handlebars),
     });
 
-//Import routes
-const index = require("./routes/index"),
-    data = require("./routes/data");
-
 //View Engine Set Up
 app.engine("handlebars", hbs.engine);
 app.set("view engine", "handlebars");
@@ -33,6 +29,10 @@ app.use(logger("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+//Import routes
+const index = require("./routes/index"),
+    data = require("./routes/data");
 
 //Initialize session and Flash for error message
 app.use(
