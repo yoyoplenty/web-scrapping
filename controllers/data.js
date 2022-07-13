@@ -1,9 +1,9 @@
 const AppError = require("../utils/appError");
 const puppeteer = require("puppeteer");
-const url = "https://www.jumia.com.ng/phones-tablets/";
+//const url = "https://www.jumia.com.ng/phones-tablets/";
 const ScrappedData = require("../models/data");
 
-async function configureTheBrowser() {
+async function configureTheBrowser(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "load", timeout: 0 });
@@ -30,9 +30,11 @@ async function checkDetails(page) {
 
 exports.scrapData = async (req, res, next) => {
     try {
-        let page = await configureTheBrowser();
+        let url = req.query.url ? `https://www.${req.query.url}` : "https://www.jumia.com.ng/phones-tablets/";
+        let page = await configureTheBrowser(url);
         let results = await checkDetails(page);
-        let savedData = await ScrappedData.insertMany(results);
+        await ScrappedData.insertMany(results);
+        let savedData = await ScrappedData.updateMany({}, { url });
         res.send(savedData);
     } catch (error) {
         return next(new AppError(500, "failed", "server error"));
