@@ -32,8 +32,8 @@ exports.scrapData = async (req, res, next) => {
     try {
         let page = await configureTheBrowser();
         let results = await checkDetails(page);
-        await ScrappedData.insertMany(results);
-        res.send(results);
+        let savedData = await ScrappedData.insertMany(results);
+        res.send(savedData);
     } catch (error) {
         return next(new AppError(500, "failed", "server error"));
     }
